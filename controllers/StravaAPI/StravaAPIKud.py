@@ -83,3 +83,43 @@ class StravaAPIKud:
     @tojson
     def getAthlete(self, goiburuak={}):
         return self.http.request('GET', self.host + "/athlete", None, goiburuak)
+
+
+    @tojson
+    def getLoggedInAthleteActivities(self, before=None, after=None, page=1, per_page=30, goiburuak={}):
+        hiztegia={
+            "page": page,
+            "per_page": per_page
+        }
+        if before != None:
+            hiztegia["before"]= before
+
+        if after != None:
+            hiztegia["after"]= after
+
+        return self.http.request('GET', self.host + "/athlete/activities", hiztegia, goiburuak)
+
+    @tojson
+    def getActivityById(self, id=None, include_all_efforts=None, goiburuak={}):
+        hiztegia={}
+
+        if id != None:
+            hiztegia["id"] = id
+        if include_all_efforts != None:
+            hiztegia["include_all_efforts"]= include_all_efforts
+
+        return self.http.request('GET', self.host + "/athlete/activities/{id}",hiztegia, goiburuak)
+
+
+    @tojson
+    def getActivityStreams(self, id=None, keys=None, key_by_type=True, goiburuak={}):
+        hiztegia={
+            "key_by_type": True
+        }
+
+        if id != None:
+            hiztegia["id"] = id
+        if keys != None:
+            hiztegia["keys"]= keys
+
+        return self.http.request('GET', self.host + "/athlete/activities/{id}/streams", hiztegia, goiburuak)
