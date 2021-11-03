@@ -123,3 +123,5 @@ class StravaAPIKud:
             hiztegia["keys"]= keys
 
         return self.http.request('GET', self.host + "/athlete/activities/{id}/streams", hiztegia, goiburuak)
+
+    #metodoak inplementatuta
