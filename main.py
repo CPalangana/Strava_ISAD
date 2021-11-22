@@ -1,4 +1,5 @@
 from controllers.StravaAPI import stravaApiKud
+from controllers.DatuBaseKud import DBKudeatzaile
 
 
 if __name__ == '__main__':
