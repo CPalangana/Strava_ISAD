@@ -46,3 +46,14 @@ def erakutsiTaulak(db):
                 kurtsorea.execute("SELECT * FROM buelta WHERE izen=%s", (x,))
 
                 print(x, kurtsorea.fetchall())
+
+def ekipamenduSartu(db,id,zapatila="we",erlojua="we",bestelakoak="we"):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,))):
+                kurtsorea.execute("UPDATE Ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id = %s;",(zapatila,erlojua,bestelakoak,id,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Ekipamendua VALUES (%s,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,)))
