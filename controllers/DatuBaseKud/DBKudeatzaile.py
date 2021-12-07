@@ -47,7 +47,7 @@ def erakutsiTaulak(db):
 
                 print(x, kurtsorea.fetchall())
 
-def ekipamenduSartu(db,id,zapatila="we",erlojua="we",bestelakoak="we"):
+def ekipamenduaSartu(db,id,zapatila="we",erlojua="we",bestelakoak="we"):
         kurtsorea = db.cursor(buffered=True)
         if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,))):
                 kurtsorea.execute("UPDATE Ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id = %s;",(zapatila,erlojua,bestelakoak,id,))
@@ -57,3 +57,106 @@ def ekipamenduSartu(db,id,zapatila="we",erlojua="we",bestelakoak="we"):
                 print("kanpo")
 
         print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,)))
+
+
+def segmentuaSartu(db, izen, hasi, amaitu):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Segmentua WHERE izen=%s",(izen,))):
+                kurtsorea.execute("UPDATE Segmentua SET hasi=%s, amaitu=%s WHERE izen = %s;",(hasi,amaitu,izen,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Segmentua VALUES (%s,%s,%s)",(izen,hasi,amaitu,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Segmentua WHERE izen=%s",(izen,)))
+
+
+def entrenamenduaSartu(db, id, mota, data, iraupena, km, bestelakoak):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Entrenamendua WHERE id=%s",(id,))):
+                kurtsorea.execute("UPDATE Entrenamendua SET mota=%s, data=%s, iraupena=%s, km=%s, bestelakoak=%s WHERE id = %s;",(mota, data, iraupena, km, bestelakoak,id,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Entrenamendua VALUES (%s,%s,%s,%s,%s,%s)",(id,mota, data, iraupena, km, bestelakoak,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Entrenamendua WHERE id=%s",(id,)))
+
+
+def medizioakSartu(db, segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Medizioak WHERE id=%s",(entrenamenduId,))):
+                kurtsorea.execute("UPDATE Medizioak SET segundua=%s, posizioa=%s, abiadura=%s, pultsazioak=%s, bestelakoak=%s WHERE id = %s;",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Medizioak VALUES (%s,%s,%s,%s,%s,%s)",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Medizioak WHERE id=%s",(entrenamenduId,)))
+
+
+def jarraitzaileaSartu(db, nickname):
+        kurtsorea = db.cursor(buffered=True)
+        kurtsorea.execute("UPDATE Jarraitzailea SET nickname=%s;",(nickname,))
+        print(kurtsorea.execute("SELECT * FROM Jarraitzailea WHERE nickname=%s",(nickname,)))
+
+
+def bueltaSartu(db, izen, mota, km, denbora,pultsazioak, abiadura, entrenamenduId):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Buelta WHERE izen=%s",(izen,))):
+                kurtsorea.execute("UPDATE Buelta SET mota=%s, km=%s, denbora=%s, pultsazioak=%s, abiadura=%s, entrenamenduId=%s WHERE izen = %s;",(mota, km, denbora,pultsazioak, abiadura, entrenamenduId,izen,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Buleta VALUES (%s,%s,%s,%s,%s,%s,%s)",(izen, mota, km, denbora,pultsazioak, abiadura, entrenamenduId,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Buelta WHERE izen=%s",(izen,)))
+
+
+def kudoSartu(db, jarraitzaileNickname, entrenamenduId):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Kudo WHERE izen=%s AND id=%s",(jarraitzaileNickname,entrenamenduId,))):
+                kurtsorea.execute("UPDATE Kudo SET hasi=%s, amaitu=%s WHERE izen = %s;",(hasi,amaitu,izen,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Segmentua VALUES (%s,%s,%s)",(izen,hasi,amaitu,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Segmentua WHERE izen=%s",(izen,)))
+
+
+def iruzkinSartu(db, iruzkina, jarraitzaileNickname, entrenamenduId):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Iruzkina WHERE izen=%s AND id=%s",(jarraitzaileNickname,entrenamenduId,))):
+                kurtsorea.execute("UPDATE Iruzkina SET iruzkina=%s WHERE izen=%s AND id=%s;",(iruzkina,jarraitzaileNickname,entrenamenduId,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Iruzkina VALUES (%s,%s,%s)",(iruzkina, jarraitzaileNickname, entrenamenduId,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Iruzkina WHERE izen=%s AND id=%s",(jarraitzaileNickname,entrenamenduId,)))
+
+
+def informazioaSartu(db, denbora, entrenamenduId, segmentuIzen):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Informazioa WHERE id=%s AND izen=%s",(entrenamenduId,segmentuIzen,))):
+                kurtsorea.execute("UPDATE Informazioa SET denbora=%s WHERE id=%s AND izen=%s;",(denbora,entrenamenduId,segmentuIzen,))
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Informazioa VALUES (%s,%s,%s)",(denbora,entrenamenduId,segmentuIzen,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Informazioa WHERE id=%s AND izen=%s",(entrenamenduId,segmentuIzen,)))
+
+
+def erabiliSartu(db, ekipamenduIzen, entrenamenduId ):
+        kurtsorea = db.cursor(buffered=True)
+        if (kurtsorea.execute("SELECT * FROM Erabili WHERE izen=%s AND id=%s",(ekipamenduIzen,entrenamenduId,))):
+                print("if barruan")
+        else:
+                kurtsorea.execute("INSERT INTO Erabili VALUES (%s,%s)",(ekipamenduIzen,entrenamenduId,))
+                print("kanpo")
+
+        print(kurtsorea.execute("SELECT * FROM Erabili WHERE izen=%s AND id=%s",(ekipamenduIzen,entrenamenduId,)))
+
+
