@@ -4,7 +4,9 @@ from controllers.DatuBaseKud import DBKudeatzaile
 if __name__ == '__main__':
         db = DBKudeatzaile.konexioa()
         DBKudeatzaile.windowManager()
+
 else:
+        #esto no se pa que esta qui pero bueno....  yo pondria el codigo este arriba
         stravaApiKud.getAccessToTheAPI()
         print(stravaApiKud.getAthlete())
         print()

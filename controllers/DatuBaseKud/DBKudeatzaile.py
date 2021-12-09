@@ -15,15 +15,15 @@ def konexioa():
 def taulakSortu(db):
         kurtsorea = db.cursor(buffered=True)
 
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Entrenamendu (id int(10), mota varchar(50), dataEguna date, iraupena time, kmkop float(3),bestelakoDatuak varchar(100), PRIMARY KEY(id) ON DELETE CASCADE);")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Segmentuak (izen varchar(30), hasi time, amaitu time, PRIMARY KEY(izen) ON DELETE CASCADE);")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Ekipamendua (izen varchar(30), zapatilak varchar(30), erlojua varchar(30), bestelakoak varchar(100), PRIMARY KEY(izen) ON DELETE CASCADE);")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Entrenamendu (id int(10), mota varchar(50), dataEguna date, iraupena time, kmkop float(3),bestelakoDatuak varchar(100), PRIMARY KEY(id));")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Segmentuak (izen varchar(30), hasi time, amaitu time, PRIMARY KEY(izen));")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Ekipamendua (izen varchar(30), zapatilak varchar(30), erlojua varchar(30), bestelakoak varchar(100), PRIMARY KEY(izen) );")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Medizioak (segundua time, posizioa varchar(50), abiadura int(3), pultsazioak int(3), bestelakoak varchar(50), entrenamenduId int(10),FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id) ON DELETE CASCADE);")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Jarraitzaile (nickname varchar(30), PRIMARY KEY(nickname) ON DELETE CASCADE);")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Jarraitzaile (nickname varchar(30), PRIMARY KEY(nickname) );")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Buelta (izen varchar(30), mota varchar(30), km float(3), denbora time,pultsazioak int(3), abiadura int(3), entrenamenduId int(10),FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id) ON DELETE CASCADE);")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Kudo (jarraitzaileNickname varchar(30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(jarraitzaileNickname) REFERENCES Jarraitzaile (nickname) ON DELETE CASCADE);")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Iruzkin (iruzkina varchar(100), jarraitzaileNickname varchar(30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(jarraitzaileNickname) REFERENCES Jarraitzaile (nickname) ON DELETE CASCADE);")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Informazioa (denbora time, segmentuIzen varchar(30), entrenamenduId int(10) ON DELETE CASCADE);")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Informazioa (denbora time, segmentuIzen varchar(30), entrenamenduId int(10) );")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Erabili (ekipamenduIzen varchar(30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(ekipamenduIzen) REFERENCES Ekipamendua (izen) ON DELETE CASCADE);")
 
 def erakutsiTaulak(db):
@@ -50,14 +50,14 @@ def erakutsiTaulak(db):
 
 def ekipamenduaSartu(db,id='we',zapatila='we',erlojua='we',bestelakoak='we'):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%i",(id,))):
+        if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,))):
                 kurtsorea.execute("UPDATE Ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id=%i;",(zapatila,erlojua,bestelakoak,id,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Ekipamendua VALUES (%i,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
+                kurtsorea.execute("INSERT INTO Ekipamendua VALUES (%s,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
                 print("kanpo")
 
-        print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE id=%i",(id,)))
+        print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,)))
 
 
 def segmentuaSartu(db, izen="we", hasi="we", amaitu="we"):
@@ -172,7 +172,7 @@ def update(db):
         #iruzkinSartu(db)
         #informazioaSartu(db)
         #erabiliSartu(db)
-        print("update egin da")
+      print("update egin da")
 
 
 def windowManager():
