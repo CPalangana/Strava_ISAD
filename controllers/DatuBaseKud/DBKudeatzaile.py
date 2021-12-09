@@ -48,16 +48,16 @@ def erakutsiTaulak(db):
 
                 print(x, kurtsorea.fetchall())
 
-def ekipamenduaSartu(db,id="we",zapatila="we",erlojua="we",bestelakoak="we"):
+def ekipamenduaSartu(db,id='we',zapatila='we',erlojua='we',bestelakoak='we'):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,))):
-                kurtsorea.execute("UPDATE Ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id = %s;",(zapatila,erlojua,bestelakoak,id,))
+        if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%i",(id,))):
+                kurtsorea.execute("UPDATE Ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id=%i;",(zapatila,erlojua,bestelakoak,id,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Ekipamendua VALUES (%s,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
+                kurtsorea.execute("INSERT INTO Ekipamendua VALUES (%i,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
                 print("kanpo")
 
-        print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,)))
+        print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE id=%i",(id,)))
 
 
 def segmentuaSartu(db, izen="we", hasi="we", amaitu="we"):
@@ -162,27 +162,28 @@ def erabiliSartu(db, ekipamenduIzen="we", entrenamenduId="we"):
 
 
 def update(db):
-        ekipamenduaSartu(db)
-        segmentuaSartu(db)
-        entrenamenduaSartu(db)
-        medizioakSartu(db)
-        jarraitzaileaSartu(db)
-        bueltaSartu(db)
-        kudoSartu(db)
-        iruzkinSartu(db)
-        informazioaSartu(db)
-        erabiliSartu(db)
+      ekipamenduaSartu(db)
+       # segmentuaSartu(db)
+        #entrenamenduaSartu(db)
+       # medizioakSartu(db)
+        #jarraitzaileaSartu(db)
+        #bueltaSartu(db)
+        #kudoSartu(db)
+        #iruzkinSartu(db)
+        #informazioaSartu(db)
+        #erabiliSartu(db)
         print("update egin da")
 
 
-def windowManager(db):
+def windowManager():
+        db2 = konexioa()
         window = tk.Tk()
         window.title("STRAVA")
         window.geometry('500x400')
 
         # Widgeta definitu
         testua = tk.Label(window, text="Aplikazioa eguneratzeko hurrengo botoia sakatu")
-        botoia = tk.Button(window, text="Eguneratu", command = update(db))
+        botoia = tk.Button(window, text="Eguneratu", command=update(db2))
 
         # widgeta bistaratu
         testua.pack()

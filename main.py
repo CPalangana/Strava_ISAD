@@ -3,7 +3,7 @@ from controllers.DatuBaseKud import DBKudeatzaile
 
 if __name__ == '__main__':
         db = DBKudeatzaile.konexioa()
-        DBKudeatzaile.windowManager(db)
+        DBKudeatzaile.windowManager()
 else:
         stravaApiKud.getAccessToTheAPI()
         print(stravaApiKud.getAthlete())
@@ -21,5 +21,5 @@ else:
         DBKudeatzaile.erakutsiTaulak(db)
         zapa=stravaApiKud.getAthlete()
         id = zapa["shoes"][0]["id"]
-        DBKudeatzaile.ekipamenduSartu(db,id)
+        DBKudeatzaile.ekipamenduSartu(db)
 
