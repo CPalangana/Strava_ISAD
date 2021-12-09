@@ -176,16 +176,33 @@ def update(db):
 
 
 def windowManager():
-        db2 = konexioa()
         window = tk.Tk()
         window.title("STRAVA")
-        window.geometry('500x400')
+        window.geometry('800x600')
 
-        # Widgeta definitu
-        testua = tk.Label(window, text="Aplikazioa eguneratzeko hurrengo botoia sakatu")
-        botoia = tk.Button(window, text="Eguneratu", command=update(db2))
+        botoia21 = tk.Button(window, text="API-tik informazioa irakurri")
+        botoia22 = tk.Button(window, text="Insert")
+        botoia23 = tk.Button(window, text="Eguneratu")
+        botoia24 = tk.Button(window, text="Datuak bistaratu")
+        botoia25 = tk.Button(window, text="Ariketa baten datuak bistaratu")
+        botoia26 = tk.Button(window, text="Bueltak bistaratu")
+        botoia27 = tk.Button(window, text="Ekipamenduaren distantzia")
 
-        # widgeta bistaratu
-        testua.pack()
-        botoia.pack()
+        botoia21.pack()
+        botoia22.pack()
+        botoia23.pack()
+        botoia24.pack()
+        botoia25.pack()
+        botoia26.pack()
+        botoia27.pack()
+
+        botoia21.place(x=0, y=0, height=100, width=400)
+        botoia22.place(x=400, y=0, height=100, width=400)
+        botoia23.place(x=0, y=100, height=100, width=800)
+        botoia24.place(x=0, y=200, height=100, width=800)
+        botoia25.place(x=0, y=300, height=100, width=800)
+        botoia26.place(x=0, y=400, height=100, width=800)
+        botoia27.place(x=0, y=500, height=100, width=800)
+
         window.mainloop()
+
