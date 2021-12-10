@@ -1,6 +1,7 @@
-import mysql.connector
 import tkinter as tk
-from tkinter import ttk, END
+from tkinter import ttk
+
+import mysql.connector
 
 
 def konexioa():
@@ -161,53 +162,46 @@ def erabiliSartu(db, ekipamenduIzen="we", entrenamenduId="we"):
 
         print(kurtsorea.execute("SELECT * FROM Erabili WHERE izen=%s AND id=%s",(ekipamenduIzen,entrenamenduId,)))
 
+def hasierakoWindow():
+        window = tk.Tk()
+        window.title("Hasiera")
+        window.geometry('300x200')
 
-def update():
-        #db = konexioa()
-        # ekipamenduaSartu(db)
-        #segmentuaSartu(db)
-        #entrenamenduaSartu(db)
-        #medizioakSartu(db)
-        #jarraitzaileaSartu(db)
-        #bueltaSartu(db)
-        #kudoSartu(db)
-        #iruzkinSartu(db)
-        #informazioaSartu(db)
-        #erabiliSartu(db)
-      print("update egin da")
+        etiketa = tk.Label(window, text="STRAVA", font=("Helvetica", 20, 'bold'), bg="Green")
+        etiketa.pack()
+
+        etiketa2 = tk.Label(window, text="Aplikazioa hasieratzeko beheko botoian klik egin")
+        botoia1 = tk.Button(window, text="Aplikazioa hasieratu", command=windowManager)
+        espacio = tk.Label(window)
+        espacio.pack()
+        etiketa2.pack()
+        botoia1.pack()
+
+        window.mainloop()
 
 
 def windowManager():
         window = tk.Tk()
         window.title("STRAVA")
-        window.geometry('800x700')
+        window.geometry('800x500')
 
         botoia21 = tk.Button(window, text="API-tik informazioa irakurri")
         botoia22 = tk.Button(window, text="Insert", command=insertFuntzioa)
         botoia221 = tk.Button(window, text="Taulen informazioa ikusi", command=taulenInfoIkusi)
         botoia23 = tk.Button(window, text="Eguneratu", command=update)
-        botoia24 = tk.Button(window, text="Datuak bistaratu")
-        botoia25 = tk.Button(window, text="Ariketa baten datuak bistaratu")
-        botoia26 = tk.Button(window, text="Bueltak bistaratu")
-        botoia27 = tk.Button(window, text="Ekipamenduaren distantzia")
+        botoia24 = tk.Button(window, text="Datuak bistaratu", command=datuakBistaratu)
 
         botoia21.pack()
         botoia22.pack()
         botoia221.pack()
         botoia23.pack()
         botoia24.pack()
-        botoia25.pack()
-        botoia26.pack()
-        botoia27.pack()
 
         botoia21.place(x=0, y=0, height=100, width=800)
-        botoia22.place(x=400, y=100, height=100, width=400)
-        botoia221.place(x=0,y=100, height=100, width=400)
-        botoia23.place(x=0, y=200, height=100, width=800)
-        botoia24.place(x=0, y=300, height=100, width=800)
-        botoia25.place(x=0, y=400, height=100, width=800)
-        botoia26.place(x=0, y=500, height=100, width=800)
-        botoia27.place(x=0, y=600, height=100, width=800)
+        botoia22.place(x=0, y=100, height=100, width=800)
+        botoia221.place(x=0,y=200, height=100, width=800)
+        botoia23.place(x=0, y=300, height=100, width=800)
+        botoia24.place(x=0, y=400, height=100, width=800)
 
         window.mainloop()
 
@@ -217,9 +211,8 @@ def insertFuntzioa():
         window.geometry('300x100')
         textua = tk.Entry(window)
         textua.pack()
-
-def kutxa(textua):
-        a=textua.get()
+        #text = textua.get()
+        #return text
 
 
 def taulenInfoIkusi():
@@ -254,7 +247,7 @@ def taulenInfoIkusi():
         window.taula = ttk.Treeview(window,columns=(0,1,2),show='headings')
 
         for i,g in enumerate(goiburuak):
-                window.taula.column(f"#{i}",minwidth=0,width=200)
+                window.taula.column(f"#{i}",minwidth=0,width=100)
                 window.taula.heading(i,text=g)
 
         for i,d in enumerate(datuak):
@@ -264,4 +257,82 @@ def taulenInfoIkusi():
         window.mainloop()
 
 
+def update():
+        #db = konexioa()
+        # ekipamenduaSartu(db)
+        #segmentuaSartu(db)
+        #entrenamenduaSartu(db)
+        #medizioakSartu(db)
+        #jarraitzaileaSartu(db)
+        #bueltaSartu(db)
+        #kudoSartu(db)
+        #iruzkinSartu(db)
+        #informazioaSartu(db)
+        #erabiliSartu(db)
+      print("update egin da")
 
+def datuakBistaratu():
+        window = tk.Tk()
+        window.title("Strava hasiera")
+        window.geometry('600x500')
+
+        botoia1 = tk.Button(window, text="Datuak eguneratu")
+        botoia2 = tk.Button(window, text="Ekipamendua ikusi", command=ekipamenduInfo)
+
+        botoia1.pack()
+        botoia2.pack()
+
+        goiburuak = ["Izena", "Hasi", "Iraun", "Mota"]
+        datuak = []
+
+        window.taula = ttk.Treeview(window, columns=(0, 1, 2, 3), show='headings')
+
+        for i,g in enumerate(goiburuak):
+                window.taula.column(f"#{i}",minwidth=0,width=100)
+                window.taula.heading(i,text=g)
+
+        for i,d in enumerate(datuak):
+                window.taula.insert(parent='',index=i,iid=i,values=d)
+
+        textua = tk.Entry(window)
+        etiketa = tk.Label(window, text="Data bidezko bilaketa egin")
+        etiketa.pack()
+        textua.pack()
+
+        textua2 = tk.Entry(window)
+        etiketa2 = tk.Label(window, text="Mota bidezko bilaketa egin")
+        etiketa2.pack()
+        textua2.pack()
+
+        etiketa3 = tk.Label(window)
+        etiketa3.pack()
+
+        window.taula.pack()
+        window.mainloop()
+
+        #text = textua.get()
+        #return text
+
+def ekipamenduInfo():
+        window = tk.Tk()
+        window.title("Ekipamenduen informazioa")
+        window.geometry('700x300')
+
+        goiburuak = ["Izena", "Ezizena", "Distantzia"]
+        datuak = []
+
+        window.taula = ttk.Treeview(window, columns=(0, 1, 2), show='headings')
+
+        for i, g in enumerate(goiburuak):
+                window.taula.column(f"#{i}", minwidth=0, width=200)
+                window.taula.heading(i, text=g)
+
+        for i,d in enumerate(datuak):
+                window.taula.insert(parent='',index=i,iid=i,values=d)
+
+        window.taula.pack()
+        window.mainloop()
+
+
+#def nireTopLevel():
+        #new_window = tk.Toplevel()
