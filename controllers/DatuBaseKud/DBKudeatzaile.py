@@ -1,5 +1,6 @@
 import mysql.connector
 import tkinter as tk
+from tkinter import ttk, END
 
 
 def konexioa():
@@ -161,11 +162,12 @@ def erabiliSartu(db, ekipamenduIzen="we", entrenamenduId="we"):
         print(kurtsorea.execute("SELECT * FROM Erabili WHERE izen=%s AND id=%s",(ekipamenduIzen,entrenamenduId,)))
 
 
-def update(db):
-      ekipamenduaSartu(db)
-       # segmentuaSartu(db)
+def update():
+        #db = konexioa()
+        # ekipamenduaSartu(db)
+        #segmentuaSartu(db)
         #entrenamenduaSartu(db)
-       # medizioakSartu(db)
+        #medizioakSartu(db)
         #jarraitzaileaSartu(db)
         #bueltaSartu(db)
         #kudoSartu(db)
@@ -178,11 +180,12 @@ def update(db):
 def windowManager():
         window = tk.Tk()
         window.title("STRAVA")
-        window.geometry('800x600')
+        window.geometry('800x700')
 
         botoia21 = tk.Button(window, text="API-tik informazioa irakurri")
-        botoia22 = tk.Button(window, text="Insert")
-        botoia23 = tk.Button(window, text="Eguneratu")
+        botoia22 = tk.Button(window, text="Insert", command=insertFuntzioa)
+        botoia221 = tk.Button(window, text="Taulen informazioa ikusi", command=taulenInfoIkusi)
+        botoia23 = tk.Button(window, text="Eguneratu", command=update)
         botoia24 = tk.Button(window, text="Datuak bistaratu")
         botoia25 = tk.Button(window, text="Ariketa baten datuak bistaratu")
         botoia26 = tk.Button(window, text="Bueltak bistaratu")
@@ -190,19 +193,75 @@ def windowManager():
 
         botoia21.pack()
         botoia22.pack()
+        botoia221.pack()
         botoia23.pack()
         botoia24.pack()
         botoia25.pack()
         botoia26.pack()
         botoia27.pack()
 
-        botoia21.place(x=0, y=0, height=100, width=400)
-        botoia22.place(x=400, y=0, height=100, width=400)
-        botoia23.place(x=0, y=100, height=100, width=800)
-        botoia24.place(x=0, y=200, height=100, width=800)
-        botoia25.place(x=0, y=300, height=100, width=800)
-        botoia26.place(x=0, y=400, height=100, width=800)
-        botoia27.place(x=0, y=500, height=100, width=800)
+        botoia21.place(x=0, y=0, height=100, width=800)
+        botoia22.place(x=400, y=100, height=100, width=400)
+        botoia221.place(x=0,y=100, height=100, width=400)
+        botoia23.place(x=0, y=200, height=100, width=800)
+        botoia24.place(x=0, y=300, height=100, width=800)
+        botoia25.place(x=0, y=400, height=100, width=800)
+        botoia26.place(x=0, y=500, height=100, width=800)
+        botoia27.place(x=0, y=600, height=100, width=800)
 
         window.mainloop()
+
+def insertFuntzioa():
+        window =tk.Tk()
+        window.title("Insert")
+        window.geometry('300x100')
+        textua = tk.Entry(window)
+        textua.pack()
+
+def kutxa(textua):
+        a=textua.get()
+
+
+def taulenInfoIkusi():
+        window = tk.Tk()
+        window.title("Taulen informazioa")
+
+        goiburuak = ["Taula","Atributua","Mota"]
+        datuak = [
+                ["Entrenamendu","id","int"],["Entrenamendu","mota","varchar"],
+                ["Entrenamendu","data","date"],["Entrenamendu","iraupena","time"],
+                ["Entrenamendu","kmkop","int"],["Entrenamendu","bestelakoDatuak","varchar"],
+                ["Segmentuak", "izena", "varchar"],["Segmentuak", "hasi", "time"],
+                ["Segmentuak", "amaitu", "time"],
+                ["Ekipamendua", "izen", "varchar"],["Ekipamendua", "zapatilak", "varchar"],
+                ["Ekipamendua", "erlojua", "varchar"],["Ekipamendua", "bestelakoak", "varchar"],
+                ["Medizioak", "segundua", "time"],["Medizioak", "posizioa", "int"],
+                ["Medizioak", "abiadura", "int"],["Medizioak", "pultsazioak", "varchar"],
+                ["Medizioak", "bestelakoak", "varchar"],["Medizioak", "entrenamenduId", "int"],
+                ["Jarraitzaile", "nickname", "varchar"],
+                ["Buelta", "izena", "varchar"],["Buelta", "mota", "varchar"],
+                ["Buelta", "km", "int"],["Buelta", "denbora", "time"],
+                ["Buelta", "pultsazio", "int"],["Buelta", "abiadura", "int"],
+                ["Buelta", "entrenamentuId", "int"],
+                ["Kudo", "jarraitzaileNickname", "varchar"],["Kudo", "entrenamenduId", "int"],
+                ["Iruzkin", "iruzkina", "varchar"],["Iruzkin", "nickname", "varchar"],
+                ["Iruzkin", "entrenamenduId", "int"],
+                ["Informazioa", "denbora", "time"],["Informazioa", "segmentuIzen", "varchar"],
+                ["Informazioa", "entrenamenduId", "int"],
+                ["Erabili", "ekipamenduIzen", "varchar"],["Erabili", "entrenamenduId", "int"]
+                ]
+
+        window.taula = ttk.Treeview(window,columns=(0,1,2),show='headings')
+
+        for i,g in enumerate(goiburuak):
+                window.taula.column(f"#{i}",minwidth=0,width=200)
+                window.taula.heading(i,text=g)
+
+        for i,d in enumerate(datuak):
+                window.taula.insert(parent='',index=i,iid=i,values=d)
+
+        window.taula.pack()
+        window.mainloop()
+
+
 
