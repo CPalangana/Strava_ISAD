@@ -17,16 +17,22 @@ def konexioa():
 def taulakSortu(db):
         kurtsorea = db.cursor(buffered=True)
 
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Entrenamendu (id int(10), mota varchar(50), dataEguna date, iraupena time, kmkop float(3),bestelakoDatuak varchar(100), PRIMARY KEY(id));")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Entrenamendu (id int(10), mota varchar(50), dataEguna date, "
+                          "iraupena time, kmkop float(3),bestelakoDatuak varchar(100), PRIMARY KEY(id));")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Segmentuak (izen varchar(30), hasi time, amaitu time, PRIMARY KEY(izen));")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Ekipamendua (izen varchar(30), zapatilak varchar(30), erlojua varchar(30), bestelakoak varchar(100), PRIMARY KEY(izen) );")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Medizioak (segundua time, posizioa varchar(50), abiadura int(3), pultsazioak int(3), bestelakoak varchar(50), entrenamenduId int(10),FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id) ON DELETE CASCADE);")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Jarraitzaile (nickname varchar(30), PRIMARY KEY(nickname) );")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Buelta (izen varchar(30), mota varchar(30), km float(3), denbora time,pultsazioak int(3), abiadura int(3), entrenamenduId int(10),FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id) ON DELETE CASCADE);")
         kurtsorea.execute("CREATE TABLE IF NOT EXISTS Kudo (jarraitzaileNickname varchar(30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(jarraitzaileNickname) REFERENCES Jarraitzaile (nickname) ON DELETE CASCADE);")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Iruzkin (iruzkina varchar(100), jarraitzaileNickname varchar(30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(jarraitzaileNickname) REFERENCES Jarraitzaile (nickname) ON DELETE CASCADE);")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Informazioa (denbora time, segmentuIzen varchar(30), entrenamenduId int(10) );")
-        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Erabili (ekipamenduIzen varchar(30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(ekipamenduIzen) REFERENCES Ekipamendua (izen) ON DELETE CASCADE);")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Iruzkin (iruzkina varchar(100), jarraitzaileNickname varchar("
+                          "30), entrenamenduId int(10), FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), "
+                          "FOREIGN KEY(jarraitzaileNickname) REFERENCES Jarraitzaile (nickname) ON DELETE CASCADE);")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Informazioa (denbora time, segmentuIzen varchar(30), "
+                          "entrenamenduId int(10) );")
+        kurtsorea.execute("CREATE TABLE IF NOT EXISTS Erabili (ekipamenduIzen varchar(30), entrenamenduId int(10), "
+                          "FOREIGN KEY(entrenamenduId) REFERENCES Entrenamendu (id), FOREIGN KEY(ekipamenduIzen) "
+                          "REFERENCES Ekipamendua (izen) ON DELETE CASCADE);")
 
 def erakutsiTaulak(db):
         kurtsorea = db.cursor()
@@ -52,115 +58,123 @@ def erakutsiTaulak(db):
 
 def ekipamenduaSartu(db,id='we',zapatila='we',erlojua='we',bestelakoak='we'):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,))):
-                kurtsorea.execute("UPDATE Ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id=%i;",(zapatila,erlojua,bestelakoak,id,))
+        kurtsorea.execute("SELECT * FROM ekipamendua WHERE izen=%s", (id,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE ekipamendua SET zapatilak=%s, erlojua=%s, bestelakoak=%s WHERE id=%i;",(zapatila,erlojua,bestelakoak,id,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Ekipamendua VALUES (%s,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
+                kurtsorea.execute("INSERT INTO ekipamendua VALUES (%s,%s,%s,%s)",(id,zapatila,erlojua,bestelakoak,))
                 print("kanpo")
-
-        print(kurtsorea.execute("SELECT * FROM Ekipamendua WHERE izen=%s",(id,)))
+        db.commit()
+        print(kurtsorea.execute("SELECT * FROM ekipamendua WHERE izen=%s",(id,)))
 
 
 def segmentuaSartu(db, izen="we", hasi="we", amaitu="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Segmentua WHERE izen=%s",(izen,))):
-                kurtsorea.execute("UPDATE Segmentua SET hasi=%s, amaitu=%s WHERE izen = %s;",(hasi,amaitu,izen,))
+        kurtsorea.execute("SELECT * FROM segmentuak WHERE izen=%s", (izen,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE Segmentuak SET hasi=%s, amaitu=%s WHERE izen = %s;",(hasi,amaitu,izen,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Segmentua VALUES (%s,%s,%s)",(izen,hasi,amaitu,))
+                kurtsorea.execute("INSERT INTO segmentuak VALUES (%s,%s,%s)",(izen,hasi,amaitu,))
                 print("kanpo")
+        db.commit()
+        print(kurtsorea.execute("SELECT * FROM Segmentuak WHERE izen=%s",(izen,)))
 
-        print(kurtsorea.execute("SELECT * FROM Segmentua WHERE izen=%s",(izen,)))
 
-
-def entrenamenduaSartu(db, id="we", mota="we", data="we", iraupena="we", km="we", bestelakoak="we"):
+def entrenamenduaSartu(db, id=1, mota="we", data="2000/12/12", iraupena="06:00:00.000000", km=12.0, bestelakoak="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Entrenamendua WHERE id=%s",(id,))):
-                kurtsorea.execute("UPDATE Entrenamendua SET mota=%s, data=%s, iraupena=%s, km=%s, bestelakoak=%s WHERE id = %s;",(mota, data, iraupena, km, bestelakoak,id,))
+        kurtsorea.execute("SELECT * FROM entrenamendu WHERE id=%s", (id,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE entrenamendu SET mota=%s, dataEguna=%s, iraupena=%s, kmkop=%s, bestelakoDatuak=%s WHERE id = %s;",(mota, data, iraupena, km, bestelakoak,id,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Entrenamendua VALUES (%s,%s,%s,%s,%s,%s)",(id,mota, data, iraupena, km, bestelakoak,))
+                kurtsorea.execute("INSERT INTO entrenamendu VALUES (%s,%s,%s,%s,%s,%s)",(id,mota, data, iraupena, km, bestelakoak,))
                 print("kanpo")
-
-        print(kurtsorea.execute("SELECT * FROM Entrenamendua WHERE id=%s",(id,)))
+        db.commit()
+        kurtsorea.execute("SELECT * FROM entrenamendu WHERE id=%s", (id,))
+        print(kurtsorea.fetchone())
 
 
 def medizioakSartu(db, segundua="we", posizioa="we", abiadura="we", pultsazioak="we", bestelakoak="we", entrenamenduId="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Medizioak WHERE id=%s",(entrenamenduId,))):
-                kurtsorea.execute("UPDATE Medizioak SET segundua=%s, posizioa=%s, abiadura=%s, pultsazioak=%s, bestelakoak=%s WHERE id = %s;",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
+        kurtsorea.execute("SELECT * FROM medizioak WHERE id=%s", (entrenamenduId,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE medizioak SET segundua=%s, posizioa=%s, abiadura=%s, pultsazioak=%s, bestelakoak=%s WHERE id = %s;",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Medizioak VALUES (%s,%s,%s,%s,%s,%s)",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
+                kurtsorea.execute("INSERT INTO medizioak VALUES (%s,%s,%s,%s,%s,%s)",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
                 print("kanpo")
-
-        print(kurtsorea.execute("SELECT * FROM Medizioak WHERE id=%s",(entrenamenduId,)))
+        db.commit()
+        print(kurtsorea.execute("SELECT * FROM medizioak WHERE id=%s",(entrenamenduId,)))
 
 
 def jarraitzaileaSartu(db, nickname="we"):
         kurtsorea = db.cursor(buffered=True)
-        kurtsorea.execute("UPDATE Jarraitzailea SET nickname=%s;",(nickname,))
-        print(kurtsorea.execute("SELECT * FROM Jarraitzailea WHERE nickname=%s",(nickname,)))
-
+        kurtsorea.execute("SELECT * FROM Jarraitzailea WHERE nickname=%s",(nickname,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("INSERT INTO jarraitzaile VALUES (%s)",(nickname,))
+        else:
+                kurtsorea.execute("UPDATE Jarraitzailea SET nickname=%s;",(nickname,))
+        db.commit()
 
 def bueltaSartu(db, izen="we", mota="we", km="we", denbora="we",pultsazioak="we", abiadura="we", entrenamenduId="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Buelta WHERE izen=%s",(izen,))):
-                kurtsorea.execute("UPDATE Buelta SET mota=%s, km=%s, denbora=%s, pultsazioak=%s, abiadura=%s, entrenamenduId=%s WHERE izen = %s;",(mota, km, denbora,pultsazioak, abiadura, entrenamenduId,izen,))
+        kurtsorea.execute("SELECT * FROM buelta WHERE izen=%s", (izen,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE buelta SET mota=%s, km=%s, denbora=%s, pultsazioak=%s, abiadura=%s, entrenamenduId=%s WHERE izen = %s;",(mota, km, denbora,pultsazioak, abiadura, entrenamenduId,izen,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Buleta VALUES (%s,%s,%s,%s,%s,%s,%s)",(izen, mota, km, denbora,pultsazioak, abiadura, entrenamenduId,))
+                kurtsorea.execute("INSERT INTO buelta VALUES (%s,%s,%s,%s,%s,%s,%s)",(izen, mota, km, denbora,pultsazioak, abiadura, entrenamenduId,))
                 print("kanpo")
-
-        print(kurtsorea.execute("SELECT * FROM Buelta WHERE izen=%s",(izen,)))
+        db.commit()
+        print(kurtsorea.execute("SELECT * FROM buelta WHERE izen=%s",(izen,)))
 
 
 def kudoSartu(db, jarraitzaileNickname="we", entrenamenduId="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Kudo WHERE izen=%s AND id=%s",(jarraitzaileNickname,entrenamenduId,))):
-                kurtsorea.execute("UPDATE Kudo SET hasi=%s, amaitu=%s WHERE izen = %s;",(hasi,amaitu,izen,))
-                print("if barruan")
-        else:
-                kurtsorea.execute("INSERT INTO Segmentua VALUES (%s,%s,%s)",(izen,hasi,amaitu,))
-                print("kanpo")
+        kurtsorea.execute("SELECT * FROM kudo WHERE jarraitzaileNickname=%s AND entrenamenduId=%s", (jarraitzaileNickname, entrenamenduId,))
+        if (not(kurtsorea.fetchone())):
+                kurtsorea.execute("INSERT INTO kudo VALUES (%s,%s)",(jarraitzaileNickname, entrenamenduId,))
 
-        print(kurtsorea.execute("SELECT * FROM Segmentua WHERE izen=%s",(izen,)))
+        db.commit()
 
 
 def iruzkinSartu(db, iruzkina="we", jarraitzaileNickname="we", entrenamenduId="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Iruzkina WHERE izen=%s AND id=%s",(jarraitzaileNickname,entrenamenduId,))):
-                kurtsorea.execute("UPDATE Iruzkina SET iruzkina=%s WHERE izen=%s AND id=%s;",(iruzkina,jarraitzaileNickname,entrenamenduId,))
+        kurtsorea.execute("SELECT * FROM iruzkina WHERE jarraitzaileNickname=%s AND entrenamenduId=%s",(jarraitzaileNickname, entrenamenduId,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE iruzkina SET iruzkina=%s WHERE jarraitzaileNickname=%s AND entrenamenduId=%s",(iruzkina,jarraitzaileNickname,entrenamenduId,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Iruzkina VALUES (%s,%s,%s)",(iruzkina, jarraitzaileNickname, entrenamenduId,))
+                kurtsorea.execute("INSERT INTO iruzkina VALUES (%s,%s,%s)",(iruzkina, jarraitzaileNickname, entrenamenduId,))
                 print("kanpo")
+        db.commit()
 
-        print(kurtsorea.execute("SELECT * FROM Iruzkina WHERE izen=%s AND id=%s",(jarraitzaileNickname,entrenamenduId,)))
 
 
 def informazioaSartu(db, denbora="we", entrenamenduId="we", segmentuIzen="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Informazioa WHERE id=%s AND izen=%s",(entrenamenduId,segmentuIzen,))):
-                kurtsorea.execute("UPDATE Informazioa SET denbora=%s WHERE id=%s AND izen=%s;",(denbora,entrenamenduId,segmentuIzen,))
+        kurtsorea.execute("SELECT * FROM informazioa WHERE entrenamenduId=%s AND segmentuIzen=%s", (entrenamenduId, segmentuIzen,))
+        if (kurtsorea.fetchone()):
+                kurtsorea.execute("UPDATE informazioa SET denbora=%s WHERE entrenamenduId=%s AND segmentuIzen=%s",(denbora,entrenamenduId,segmentuIzen,))
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Informazioa VALUES (%s,%s,%s)",(denbora,entrenamenduId,segmentuIzen,))
+                kurtsorea.execute("INSERT INTO informazioa VALUES (%s,%s,%s)",(denbora,entrenamenduId,segmentuIzen,))
                 print("kanpo")
-
-        print(kurtsorea.execute("SELECT * FROM Informazioa WHERE id=%s AND izen=%s",(entrenamenduId,segmentuIzen,)))
+        db.commit()
 
 
 def erabiliSartu(db, ekipamenduIzen="we", entrenamenduId="we"):
         kurtsorea = db.cursor(buffered=True)
-        if (kurtsorea.execute("SELECT * FROM Erabili WHERE izen=%s AND id=%s",(ekipamenduIzen,entrenamenduId,))):
+        kurtsorea.execute("SELECT * FROM erabili WHERE ekipamenduIzen=%s AND entrenamenduId=%s",(ekipamenduIzen, entrenamenduId,))
+        if (kurtsorea.fetchone()):
                 print("if barruan")
         else:
-                kurtsorea.execute("INSERT INTO Erabili VALUES (%s,%s)",(ekipamenduIzen,entrenamenduId,))
+                kurtsorea.execute("INSERT INTO erabili VALUES (%s,%s)",(ekipamenduIzen,entrenamenduId,))
                 print("kanpo")
+        db.commit()
 
-        print(kurtsorea.execute("SELECT * FROM Erabili WHERE izen=%s AND id=%s",(ekipamenduIzen,entrenamenduId,)))
 
 def hasierakoWindow():
         window = tk.Tk()
@@ -180,14 +194,17 @@ def hasierakoWindow():
         window.mainloop()
 
 
-def windowManager():
-        window = tk.Tk()
+def windowManager(win=None):
+        if win==None:
+                window = tk.Tk()
+        else:
+                window=win
         window.title("STRAVA")
         window.geometry('800x500')
 
         botoia21 = tk.Button(window, text="API-tik informazioa irakurri")
-        botoia22 = tk.Button(window, text="Insert", command=insertFuntzioa)
-        botoia221 = tk.Button(window, text="Taulen informazioa ikusi", command=taulenInfoIkusi)
+        botoia22 = tk.Button(window, text="Insert", command=lambda:insertFuntzioa(window))
+        botoia221 = tk.Button(window, text="Taulen informazioa ikusi", command=lambda:taulenInfoIkusi(window))
         botoia23 = tk.Button(window, text="Eguneratu", command=update)
         botoia24 = tk.Button(window, text="Datuak bistaratu", command=datuakBistaratu)
 
@@ -205,18 +222,189 @@ def windowManager():
 
         window.mainloop()
 
-def insertFuntzioa():
-        window =tk.Tk()
+def insertFuntzioa(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window =win
         window.title("Insert")
-        window.geometry('300x100')
-        textua = tk.Entry(window)
-        textua.pack()
+        window.geometry('300x200')
+
+        botoiaI1 = tk.Button(window, text="Entrenamendua",command=lambda:insertEntrenamendu(window))
+        botoiaI2 = tk.Button(window, text="Segmentua",command=lambda:insertSegmentua(window))
+        botoiaI3 = tk.Button(window, text="Ekipamendua",command=lambda:insertEkipamendua(window))
+        botoiaI4 = tk.Button(window, text="Buelta", command=lambda: insertBuelta(window))
+        botoiaIB = tk.Button(window, text="Atzera", command=lambda: windowManager(window))
+        botoiaI1.pack()
+        botoiaI2.pack()
+        botoiaI3.pack()
+        botoiaI4.pack()
+        botoiaIB.pack()
         #text = textua.get()
         #return text
 
+def insertEntrenamendu(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window =win
 
-def taulenInfoIkusi():
-        window = tk.Tk()
+        window.title("InsertEntrenamendu ")
+        window.geometry('300x300')
+
+        textua1 = tk.Entry(window)
+        etiketa1 = tk.Label(window, text="Id")
+        textua2 = tk.Entry(window)
+        etiketa2 = tk.Label(window, text="Mota")
+        textua3 = tk.Entry(window)
+        etiketa3 = tk.Label(window, text="Data")
+        textua4 = tk.Entry(window)
+        etiketa4 = tk.Label(window, text="Iraupen")
+        textua5 = tk.Entry(window)
+        etiketa5 = tk.Label(window, text="Kilometroak")
+        textua6 = tk.Entry(window)
+        etiketa6 = tk.Label(window, text="Bestelakoak")
+
+        etiketa1.pack()
+        textua1.pack()
+        etiketa2.pack()
+        textua2.pack()
+        etiketa3.pack()
+        textua3.pack()
+        etiketa4.pack()
+        textua4.pack()
+        etiketa5.pack()
+        textua5.pack()
+        etiketa6.pack()
+        textua6.pack()
+
+
+        botoiaI1 = tk.Button(window, text="Insert", command=lambda:entrenamenduaSartu(konexioa(),textua1.get(),textua2.get(),textua3.get(),textua4.get(),textua5.get(),textua6.get()))
+        botoiaI2 = tk.Button(window, text="Atzera", command=lambda:insertFuntzioa(window))
+
+        botoiaI1.pack()
+        botoiaI2.pack()
+        window.mainloop()
+        #text = textua.get()
+        #return text
+
+def insertSegmentua(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
+
+        window.title("InsertEntrenamendu ")
+        window.geometry('300x300')
+
+        textua1 = tk.Entry(window)
+        etiketa1 = tk.Label(window, text="Izena")
+        textua2 = tk.Entry(window)
+        etiketa2 = tk.Label(window, text="Hasiera")
+        textua3 = tk.Entry(window)
+        etiketa3 = tk.Label(window, text="Amaiera")
+
+        etiketa1.pack()
+        textua1.pack()
+        etiketa2.pack()
+        textua2.pack()
+        etiketa3.pack()
+        textua3.pack()
+
+        botoiaI1 = tk.Button(window, text="Insert",
+                             command=lambda: segmentuaSartu(konexioa(), textua1.get(), textua2.get(), textua3.get()))
+        botoiaI2 = tk.Button(window, text="Atzera", command=lambda: insertFuntzioa(window))
+
+        botoiaI1.pack()
+        botoiaI2.pack()
+        window.mainloop()
+        # text = textua.get()
+        # return text
+def insertBuelta(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
+
+        window.title("InsertBuelta ")
+        window.geometry('300x300')
+
+        textuaK = tk.Entry(window)
+        etiketaK = tk.Label(window, text="Id")
+        textua1 = tk.Entry(window)
+        etiketa1 = tk.Label(window, text="Izena")
+        textua2 = tk.Entry(window)
+        etiketa2 = tk.Label(window, text="Mota")
+        textua3 = tk.Entry(window)
+        etiketa3 = tk.Label(window, text="km")
+        textua4 = tk.Entry(window)
+        etiketa4 = tk.Label(window, text="Denbora")
+        textua5 = tk.Entry(window)
+        etiketa5 = tk.Label(window, text="Pultsazioak")
+        textua6 = tk.Entry(window)
+        etiketa6 = tk.Label(window, text="abiadura")
+
+        etiketaK.pack()
+        textuaK.pack()
+        etiketa1.pack()
+        textua1.pack()
+        etiketa2.pack()
+        textua2.pack()
+        etiketa3.pack()
+        textua3.pack()
+        etiketa4.pack()
+        textua4.pack()
+        etiketa5.pack()
+        textua5.pack()
+        etiketa6.pack()
+        textua6.pack()
+
+        botoiaI1 = tk.Button(window, text="Insert",
+                             command=lambda: bueltaSartu(konexioa(), textua1.get(), textua2.get(), textua3.get(),
+                                                                textua4.get(), textua5.get(), textua6.get(),textuaK.get()))
+        botoiaI2 = tk.Button(window, text="Atzera", command=lambda: insertFuntzioa(window))
+
+        botoiaI1.pack()
+        botoiaI2.pack()
+        window.mainloop()
+        # text = textua.get()
+        # return text
+
+def insertEkipamendua(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
+
+        window.title("InsertEntrenamendu ")
+        window.geometry('300x300')
+
+        textua1 = tk.Entry(window)
+        etiketa1 = tk.Label(window, text="izen")
+        textua2 = tk.Entry(window)
+        etiketa2 = tk.Label(window, text="zapatilak")
+        textua3 = tk.Entry(window)
+        etiketa3 = tk.Label(window, text="erlojua")
+        textua4 = tk.Entry(window)
+        etiketa4 = tk.Label(window, text="bestelakoak")
+
+        etiketa1.pack()
+        textua1.pack()
+        etiketa2.pack()
+        textua2.pack()
+        etiketa3.pack()
+        textua3.pack()
+        etiketa4.pack()
+        textua4.pack()
+
+        botoiaI1 = tk.Button(window, text="Insert",
+                command=lambda: ekipamenduaSartu(konexioa(), textua1.get(), textua2.get(),
+                                                                        textua3.get(),
+                                                                        textua4.get()))
+        botoiaI2 = tk.Button(window, text="Atzera", command=lambda: insertFuntzioa(window))
+
+        botoiaI1.pack()
+        botoiaI2.pack()
+        window.mainloop()
+                # text = textua.get()
+                # return text
+def taulenInfoIkusi(win):
+        window = win
         window.title("Taulen informazioa")
 
         goiburuak = ["Taula","Atributua","Mota"]
