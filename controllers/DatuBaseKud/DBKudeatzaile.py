@@ -205,7 +205,7 @@ def windowManager(win=None):
         botoia21 = tk.Button(window, text="API-tik informazioa irakurri")
         botoia22 = tk.Button(window, text="Insert", command=lambda:insertFuntzioa(window))
         botoia221 = tk.Button(window, text="Taulen informazioa ikusi", command=lambda:taulenInfoIkusi(window))
-        botoia23 = tk.Button(window, text="Eguneratu", command=update)
+        botoia23 = tk.Button(window, text="Eguneratu", command=updateBistaratu)
         botoia24 = tk.Button(window, text="Datuak bistaratu", command=datuakBistaratu)
 
         botoia21.pack()
@@ -403,6 +403,7 @@ def insertEkipamendua(win):
         window.mainloop()
                 # text = textua.get()
                 # return text
+
 def taulenInfoIkusi(win):
         window = win
         window.title("Taulen informazioa")
@@ -446,18 +447,26 @@ def taulenInfoIkusi(win):
 
 
 def update():
-        #db = konexioa()
-        # ekipamenduaSartu(db)
-        #segmentuaSartu(db)
-        #entrenamenduaSartu(db)
-        #medizioakSartu(db)
-        #jarraitzaileaSartu(db)
-        #bueltaSartu(db)
-        #kudoSartu(db)
-        #iruzkinSartu(db)
-        #informazioaSartu(db)
-        #erabiliSartu(db)
-      print("update egin da")
+        db = konexioa()
+        ekipamenduaSartu(db)
+        segmentuaSartu(db)
+        entrenamenduaSartu(db)
+        medizioakSartu(db)
+        jarraitzaileaSartu(db)
+        bueltaSartu(db)
+        kudoSartu(db)
+        iruzkinSartu(db)
+        informazioaSartu(db)
+        erabiliSartu(db)
+        updateBistaratu()
+
+def updateBistaratu():
+        window = tk.Tk()
+        window.title("Update")
+        window.geometry('200x100')
+        etiketa=tk.Label(window,text="Update egin da")
+        etiketa.pack()
+        window.mainloop()
 
 def datuakBistaratu():
         window = tk.Tk()
