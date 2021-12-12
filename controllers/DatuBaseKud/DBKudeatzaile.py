@@ -323,7 +323,7 @@ def insertBuelta(win):
         window = win
 
         window.title("InsertBuelta ")
-        window.geometry('300x300')
+        window.geometry('300x390')
 
         textuaK = tk.Entry(window)
         etiketaK = tk.Label(window, text="Id")
