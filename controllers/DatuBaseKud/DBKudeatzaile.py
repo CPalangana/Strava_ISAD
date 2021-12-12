@@ -98,15 +98,14 @@ def entrenamenduaSartu(db, id=1, mota="we", data="2000/12/12", iraupena="06:00:0
 
 def medizioakSartu(db, segundua="we", posizioa="we", abiadura="we", pultsazioak="we", bestelakoak="we", entrenamenduId="we"):
         kurtsorea = db.cursor(buffered=True)
-        kurtsorea.execute("SELECT * FROM medizioak WHERE id=%s", (entrenamenduId,))
+        kurtsorea.execute("SELECT * FROM medizioak WHERE entrenamenduId=%s", (entrenamenduId,))
         if (kurtsorea.fetchone()):
-                kurtsorea.execute("UPDATE medizioak SET segundua=%s, posizioa=%s, abiadura=%s, pultsazioak=%s, bestelakoak=%s WHERE id = %s;",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
+                kurtsorea.execute("UPDATE medizioak SET segundua=%s, posizioa=%s, abiadura=%s, pultsazioak=%s, bestelakoak=%s WHERE entrenamenduId = %s;",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
                 print("if barruan")
         else:
                 kurtsorea.execute("INSERT INTO medizioak VALUES (%s,%s,%s,%s,%s,%s)",(segundua, posizioa, abiadura, pultsazioak, bestelakoak, entrenamenduId,))
                 print("kanpo")
         db.commit()
-        print(kurtsorea.execute("SELECT * FROM medizioak WHERE id=%s",(entrenamenduId,)))
 
 
 def jarraitzaileaSartu(db, nickname="we"):
@@ -175,6 +174,12 @@ def erabiliSartu(db, ekipamenduIzen="we", entrenamenduId="we"):
                 print("kanpo")
         db.commit()
 
+def ekipamenduSum(db,ekiId):
+        kurtsorea = db.cursor(buffered=True)
+        Kurtsorea.execute(
+                "SELECT (SUM(Entrenamendu.kmkop)) FROM Ekipamendua JOIN Erabili ON Erabili.ekipamenduIzen = Ekipamendua.izen JOIN Entrenamendu ON Erabili.entrenamenduId = Entrenamendu.id WHERE Ekipamendua.izen = %s",
+                (ekiId,))
+
 
 def hasierakoWindow():
         window = tk.Tk()
@@ -205,23 +210,48 @@ def windowManager(win=None):
         botoia21 = tk.Button(window, text="API-tik informazioa irakurri")
         botoia22 = tk.Button(window, text="Insert", command=lambda:insertFuntzioa(window))
         botoia221 = tk.Button(window, text="Taulen informazioa ikusi", command=lambda:taulenInfoIkusi(window))
-        botoia23 = tk.Button(window, text="Eguneratu", command=updateBistaratu)
-        botoia24 = tk.Button(window, text="Datuak bistaratu", command=datuakBistaratu)
+        botoia23 = tk.Button(window, text="Eguneratu", command=lambda:updateBistaratu(window))
+        botoia24 = tk.Button(window, text="Datuak bistaratu", command=lambda:datuakBistaratu(window))
+        botoia223 = tk.Button(window, text="Ekipamendua Sum", command=lambda: ekiSumWindow(window))
 
         botoia21.pack()
         botoia22.pack()
         botoia221.pack()
         botoia23.pack()
         botoia24.pack()
+        botoia223.pack()
 
         botoia21.place(x=0, y=0, height=100, width=800)
         botoia22.place(x=0, y=100, height=100, width=800)
         botoia221.place(x=0,y=200, height=100, width=800)
         botoia23.place(x=0, y=300, height=100, width=800)
         botoia24.place(x=0, y=400, height=100, width=800)
+        botoia223.place(x=0, y=500, height=100, width=800)
 
         window.mainloop()
+def ekiSumWindow(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
 
+        window.title("EkipaSum")
+        window.geometry('300x300')
+
+        textua1 = tk.Entry(window)
+        etiketa1 = tk.Label(window, text="Izena")
+
+        etiketa1.pack()
+        textua1.pack()
+
+        botoiaI1 = tk.Button(window, text="Insert",
+                             command=lambda: ekipamenduSum(konexioa(),textua1.get()))
+        botoiaI2 = tk.Button(window, text="Atzera", command=lambda: windowManager(window))
+
+        botoiaI1.pack()
+        botoiaI2.pack()
+        window.mainloop()
+        # text = textua.get()
+        # return text
 def insertFuntzioa(win):
         for widgets in win.winfo_children():
                 widgets.destroy()
@@ -405,6 +435,8 @@ def insertEkipamendua(win):
                 # return text
 
 def taulenInfoIkusi(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
         window = win
         window.title("Taulen informazioa")
 
@@ -460,7 +492,10 @@ def update():
         erabiliSartu(db)
         updateBistaratu()
 
-def updateBistaratu():
+def updateBistaratu(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
         window = tk.Tk()
         window.title("Update")
         window.geometry('200x100')
@@ -468,8 +503,10 @@ def updateBistaratu():
         etiketa.pack()
         window.mainloop()
 
-def datuakBistaratu():
-        window = tk.Tk()
+def datuakBistaratu(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
         window.title("Strava hasiera")
         window.geometry('600x500')
 
@@ -510,8 +547,10 @@ def datuakBistaratu():
         #text = textua.get()
         #return text
 
-def ekipamenduInfo():
-        window = tk.Tk()
+def ekipamenduInfo(win):
+        for widgets in win.winfo_children():
+                widgets.destroy()
+        window = win
         window.title("Ekipamenduen informazioa")
         window.geometry('700x300')
 
